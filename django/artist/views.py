@@ -9,6 +9,6 @@ def artist_list(request):
     # 'artists' for context to be delivered
     artists = Artist.objects.all()
     context = {
-        'artists' : artists,
+        'artists': artists,
     }
     return render(request, 'artist/artist_list.html', context)
