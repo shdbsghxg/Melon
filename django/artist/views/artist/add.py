@@ -1,18 +1,10 @@
-from django.http import HttpResponse
-from django.shortcuts import render, redirect
+from django.shortcuts import redirect, render
 
-from .models import Artist
+from artist.models import Artist
 
-
-def artist_list(request):
-    # show artist ist ad ul > li
-    # use template 'artist/artist_list.html'
-    # 'artists' for context to be delivered
-    artists = Artist.objects.all()
-    context = {
-        'artists': artists,
-    }
-    return render(request, 'artist/artist_list.html', context)
+__all__ = (
+    'artist_add',
+)
 
 
 def artist_add(request):

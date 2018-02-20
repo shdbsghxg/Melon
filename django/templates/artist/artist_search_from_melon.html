@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div>
+    <h3>artists from melon</h3>
+    <form action="">
+        <input type="text" name="keyword" placeholder="artist name">
+        <button type="submit">search</button>
+    </form>
+
+    <ul>
+        {% for artist_info in artist_info_list %}
+        <li>
+            <img src="{{ artist_info.url_img_cover }}" alt="">
+            <span>{{ artist_info.artist_id }} | {{ artist_info.name }}</span>
+
+            <form action="{% url 'artist:artist-add-from-melon' %}" method="POST">
+                {% csrf_token %}
+                <input type="hidden" name="artist_id" value="{{ artist_info.artist_id }}">
+                <button type="submit">Add to DB</button>
+            </form>
+
+        </li>
+        {% endfor %}
+    </ul>
+</div>
+
+{% endblock %}
