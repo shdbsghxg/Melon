@@ -51,35 +51,26 @@ def song_search(request):
     # search_result show in 3 different ways
     # --> result by artist / album / song
 
-    if request.method == 'POST':
-        # when keyword is empty, no queryset return
-        keyword = request.POST['keyword'].strip()
-        if keyword:
-            # song_from_artists
-            song_from_artists = Song.objects.filter(
-                album__artists__name__contains=keyword
-            )
-            context['songs_from_artists'] = song_from_artists
-            # song_from_albums
-            song_from_albums = Song.objects.filter(
-                album__title__contains=keyword
-            )
-            context['songs_from_albums'] = song_from_albums
-            # song_from_title
-            song_from_title = Song.objects.filter(
-                title__contains=keyword
-            )
-            context['songs_from_title'] = song_from_title
-            # title__contains
-            # songs = Song.objects.filter(
-            #     Q(title__contains=keyword) |
-            #     Q(album__title__contains=keyword) |
-            #     Q(album__artists__name__contains=keyword)
-            # ).distinct()
+    # when keyword is empty, how?? --> do sth, exception manage --> used get('keyword', None)
+    keyword = request.GET.get('keyword')
+    if keyword:
 
-            # GET/POST two cases --> context empty/filled two cases
-            # --> if / else trimmed
-            # context['songs'] = songs
+        song_from_artists = Song.objects.filter(album__artists__name__contains=keyword)
+        context['songs_from_artists'] = song_from_artists
+        song_from_albums = Song.objects.filter(album__title__contains=keyword)
+        context['songs_from_albums'] = song_from_albums
+        song_from_title = Song.objects.filter(title__contains=keyword)
+        context['songs_from_title'] = song_from_title
 
+        # title__contains
+        # songs = Song.objects.filter(
+        #     Q(title__contains=keyword) |
+        #     Q(album__title__contains=keyword) |
+        #     Q(album__artists__name__contains=keyword)
+        # ).distinct()
+
+        # GET/POST two cases --> context empty/filled two cases
+        # --> if / else trimmed
+        # context['songs'] = songs
 
     return render(request, 'song/song_search.html', context)

@@ -4,9 +4,8 @@
 {% block content %}
 
 <div>
-
-    <form action="" method="POST">
-        {% csrf_token %}
+    <h1><a href="{% url 'song:song-search' %}">Search</a></h1>
+    <form action="" method="GET">
         <div>
             <h1>Song Search</h1>
         </div>
