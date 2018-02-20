@@ -1,7 +1,9 @@
+from collections import namedtuple
+from typing import NamedTuple
+
 from django.http import HttpResponse
 from django.shortcuts import render
 
-# Create your views here.
 from song.models import Song
 
 from django.db.models import Q
@@ -38,7 +40,6 @@ def song_search(request):
     4. render including context
     5. print songs
     """
-    context = {}
     # in case, keyword is included in name of Artist related with Song
     # in case, keyword is included in name of Album related with Song
     # in case, keyword is included in both( or --> Q object), 'songs' = queryset
@@ -52,25 +53,49 @@ def song_search(request):
     # --> result by artist / album / song
 
     # when keyword is empty, how?? --> do sth, exception manage --> used get('keyword', None)
+
+    context = {
+        'song_infos': []
+    }
     keyword = request.GET.get('keyword')
+
+    class SongInfo(NamedTuple):
+        type: str
+        q: Q
+
     if keyword:
+        song_infos = (
+            SongInfo(type='artist', q=Q(album__artists__name__contains=keyword)),
+            SongInfo(type='album', q=Q(album__title__contains=keyword)),
+            SongInfo(type='title', q=Q(title__contains=keyword)),
+        )
+        for type, q in song_infos:
+            context['song_infos'].append({
+                'type': type,
+                'songs': Song.objects.filter(q),
+            })
 
-        song_from_artists = Song.objects.filter(album__artists__name__contains=keyword)
-        context['songs_from_artists'] = song_from_artists
-        song_from_albums = Song.objects.filter(album__title__contains=keyword)
-        context['songs_from_albums'] = song_from_albums
-        song_from_title = Song.objects.filter(title__contains=keyword)
-        context['songs_from_title'] = song_from_title
+            # context['song_infos'].append({
+            #     'type': 'artist',
+            #     'songs': song_from_artists,
+            # })
+            # context['song_infos'].append({
+            #     'type': 'album',
+            #     'songs': song_from_albums,
+            # })
+            # context['song_infos'].append({
+            #     'type': 'title',
+            #     'songs': song_from_title,
+            # })
+            # title__contains
+            # songs = Song.objects.filter(
+            #     Q(title__contains=keyword) |
+            #     Q(album__title__contains=keyword) |
+            #     Q(album__artists__name__contains=keyword)
+            # ).distinct()
 
-        # title__contains
-        # songs = Song.objects.filter(
-        #     Q(title__contains=keyword) |
-        #     Q(album__title__contains=keyword) |
-        #     Q(album__artists__name__contains=keyword)
-        # ).distinct()
-
-        # GET/POST two cases --> context empty/filled two cases
-        # --> if / else trimmed
-        # context['songs'] = songs
+            # GET/POST two cases --> context empty/filled two cases
+            # --> if / else trimmed
+            # context['songs'] = songs
 
     return render(request, 'song/song_search.html', context)

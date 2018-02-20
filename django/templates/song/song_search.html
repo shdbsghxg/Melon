@@ -9,13 +9,13 @@
         <div>
             <h1>Song Search</h1>
         </div>
-        <input type="text" name="keyword">
+        <input type="text" name="keyword" value="{{ request.GET.keyword }}">
         <button type="submit">search</button>
     </form>
 
-    {% include 'include/song_search_result.html' with type='artists' songs=songs_from_artists only %}
-    {% include 'include/song_search_result.html' with type='albums' songs=songs_from_albums only %}
-    {% include 'include/song_search_result.html' with type='title' songs=songs_from_title only %}
+    {% for song_info in song_infos %}
+        {% include 'include/song_search_result.html' with type=song_info.type songs=song_info.songs only %}
+    {% endfor %}
 
 </div>
 
