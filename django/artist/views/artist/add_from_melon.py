@@ -1,7 +1,9 @@
-from datetime import datetime
+from io import BytesIO
 
-from django.http import HttpResponse
+import requests
+from django.core.files import File
 from django.shortcuts import redirect
+from datetime import datetime
 
 from crawler.artist import ArtistData
 from ...models import Artist
@@ -34,11 +36,12 @@ def artist_add_from_melon(request):
 
     if request.method == 'POST':
         artist_id = request.POST['artist_id']
-        # crawling part
+        # crawling part <class>
         artist = ArtistData(artist_id)
         artist.get_detail()
 
         name = artist.name
+        url_img_cover = artist.url_img_cover
         real_name = artist.personal_information.get('본명', '')
         nationality = artist.personal_information.get('국적', '')
         birth_date_str = artist.personal_information.get('생일', '')
@@ -52,10 +55,16 @@ def artist_add_from_melon(request):
         else:
             blood_type = Artist.BLOOD_TYPE_OTHER
 
+        response = requests.get(url_img_cover)
+        binary_data = response.content
+        temp_file = BytesIO()
+        temp_file.write(binary_data)
+        temp_file.seek(0)
+
         # if artist w/ melon_id = artist_id already exists,
         # update date in DB,
         # or add new artist in DB
-        Artist.objects.update_or_create(
+        artist, _ = Artist.objects.update_or_create(
             melon_id=artist_id,
             defaults={
                 'name': name,
@@ -66,4 +75,9 @@ def artist_add_from_melon(request):
                 'blood_type': blood_type,
             }
         )
+
+        from pathlib import Path
+        file_name = Path(url_img_cover).name
+        artist.img_profile.save(file_name, File(temp_file))
+
         return redirect('artist:artist-list')
