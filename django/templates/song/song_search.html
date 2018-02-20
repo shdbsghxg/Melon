@@ -14,8 +14,23 @@
         <button type="submit">search</button>
     </form>
 
+    <h2>searched by artist</h2>
     <ul>
-        {% for song in songs %}
+        {% for song in songs_from_artists %}
+            <li>{{ song.title }}</li>
+        {% endfor %}
+    </ul>
+
+    <h2>searched by album</h2>
+    <ul>
+        {% for song in songs_from_albums %}
+            <li>{{ song.title }}</li>
+        {% endfor %}
+    </ul>
+
+    <h2>searched by title</h2>
+    <ul>
+        {% for song in songs_from_title %}
             <li>{{ song.title }}</li>
         {% endfor %}
     </ul>
