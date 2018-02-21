@@ -1,20 +1,13 @@
-from collections import namedtuple
 from typing import NamedTuple
-
-from django.http import HttpResponse
-from django.shortcuts import render
-
-from song.models import Song
 
 from django.db.models import Q
 
+from ...models import Song
+from django.shortcuts import render
 
-def song_list(request):
-    songs = Song.objects.all()
-    context = {
-        'songs': songs
-    }
-    return render(request, 'song/song_list.html', context)
+__all__ = (
+    'song_search',
+)
 
 
 def song_search(request):
