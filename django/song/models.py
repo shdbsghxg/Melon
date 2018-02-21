@@ -15,7 +15,7 @@ class Song(models.Model):
     title = models.CharField('곡 제목', max_length=100)
     genre = models.CharField('장르', max_length=100)
     lyrics = models.TextField('가사', blank=True)
-    artist = models.CharField('아티스트', max_length=30, null=True)
+    artist = models.CharField('아티스트', max_length=50, null=True)
     release_song_date = models.DateField(blank=True, null=True)
 
     @property
