@@ -1,3 +1,4 @@
+
 from io import BytesIO
 
 import requests
@@ -70,7 +71,7 @@ def artist_add_from_melon(request):
                 'name': name,
                 'real_name': real_name,
                 'nationality': nationality,
-                'birth_date': datetime.strptime(birth_date_str, '%Y.%m.%d'),
+                'birth_date': datetime.strftime(birth_date_str, '%Y.%m.%d'),
                 'constellation': constellation,
                 'blood_type': blood_type,
             }
