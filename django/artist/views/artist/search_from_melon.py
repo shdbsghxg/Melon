@@ -1,4 +1,7 @@
 from django.shortcuts import render
+import re
+import requests
+from bs4 import BeautifulSoup
 
 __all__ = (
     'artist_search_from_melon',
@@ -27,9 +30,7 @@ def artist_search_from_melon(request):
     keyword = request.GET.get('keyword')
     context = {}
     if keyword:
-        import re
-        import requests
-        from bs4 import BeautifulSoup
+
         artist_info_list = []
         URL = 'https://www.melon.com/search/artist/index.htm'
         params = {'q': keyword}
