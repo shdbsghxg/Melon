@@ -13,7 +13,13 @@ from artist.models import Artist
 class SongManager(models.Manager):
 
     def update_or_create_from_melon(self, song_id):
-        # crawl
+        """
+        Song info from melon w/ song_id
+        Artist info from melon w/ artist_id, and ArtistManager.update_or_create_from_melon
+
+        :param song_id:
+        :return: Song instance, bool(song_created)
+        """
         url = 'https://melon.com/song/detail.htm'
         params = {
             'songId': song_id,
@@ -72,8 +78,8 @@ class SongManager(models.Manager):
             }
         )
 
-        artist = Artist.objects.update_or_create_from_melon(artist_id)
-        # song.artists.add(artist)
+        artist, artist_created = Artist.objects.update_or_create_from_melon(artist_id)
+        song.artists.add(artist)
 
         # from pathlib import Path
         # file_name = Path(url_img_cover).name
