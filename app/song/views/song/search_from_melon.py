@@ -24,16 +24,17 @@ def song_search_from_melon(request):
 
         for tr in tr_list:
             song_id = tr.select_one('td:nth-of-type(1) input[type=checkbox]').get('value')
-            title_cont = tr.select_one('td:nth-of-type(3) a').get('href')
-            title_temp = re.search(r"'SO','(.*?)','" + re.escape(song_id), title_cont).group(1)
-            # title_temp = re.search(r"'SO','(.*?)'", title_cont).group(1)
-            # title = tr.select_one('td:nth-of-type(3) a.fc_gray').get_text(strip=True)
+            if tr.select_one('td:nth-of-type(3) a.fc_gray'):
+                title = tr.select_one('td:nth-of-type(3) a.fc_gray').get('title')
+            else:
+                title = tr.select_one('td:nth-of-type(3) > div > div > span').get('title')
+
             artist = tr.select_one('td:nth-of-type(4) span.checkEllipsisSongdefaultList').get_text(strip=True)
             album = tr.select_one('td:nth-of-type(5) a').get_text(strip=True)
 
             song_info_list.append({
                 'song_id': song_id,
-                'title': title_temp,
+                'title': title,
                 'artist': artist,
                 'album': album,
             })
