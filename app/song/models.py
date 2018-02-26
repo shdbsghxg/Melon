@@ -79,11 +79,10 @@ class SongManager(models.Manager):
         )
 
         artist, artist_created = Artist.objects.update_or_create_from_melon(artist_id)
-        song.artists.add(artist)
+        album, album_created = Album.objects.update_or_create_from_melon(album_id)
 
-        # from pathlib import Path
-        # file_name = Path(url_img_cover).name
-        # song.album.img_cover.save(file_name, File(temp_file))
+        song.artists.add(artist)
+        song.album = album
 
         return song, song_created
 
