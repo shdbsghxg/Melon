@@ -15,6 +15,7 @@ class ArtistManager(models.Manager):
 
         name = artist.name
         url_img_cover = artist.url_img_cover
+        print(url_img_cover)
         real_name = artist.personal_information.get('본명', '')
         nationality = artist.personal_information.get('국적', '')
         birth_date_str = artist.personal_information.get('생일', '')
@@ -49,17 +50,19 @@ class ArtistManager(models.Manager):
             ext=get_buffer_ext(temp_file),
         )
 
+        if artist.img_profile:
+            artist.img_profile.delete()
         artist.img_profile.save(file_name, File(temp_file))
 
         return artist, artist_created
 
 
 class Artist(models.Model):
-    BLOOD_TYPE_A = 'a'
-    BLOOD_TYPE_B = 'b'
-    BLOOD_TYPE_AB = 'c'
-    BLOOD_TYPE_O = 'o'
-    BLOOD_TYPE_OTHER = 'x'
+    BLOOD_TYPE_A = 'A'
+    BLOOD_TYPE_B = 'B'
+    BLOOD_TYPE_AB = 'C'
+    BLOOD_TYPE_O = 'O'
+    BLOOD_TYPE_OTHER = 'X'
     CHOICES_BLOOD_TYPE = (
         (BLOOD_TYPE_A, 'A형'),
         (BLOOD_TYPE_B, 'B형'),
