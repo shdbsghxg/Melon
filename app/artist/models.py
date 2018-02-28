@@ -1,11 +1,10 @@
 from datetime import datetime
 
-import requests
 from django.core.files import File
 from django.db import models
-from io import BytesIO
 
 from crawler.artist import ArtistData
+from utils.file import download, get_buffer_ext
 
 
 class ArtistManager(models.Manager):
@@ -29,12 +28,6 @@ class ArtistManager(models.Manager):
         else:
             blood_type = Artist.BLOOD_TYPE_OTHER
 
-        response = requests.get(url_img_cover)
-        binary_data = response.content
-        temp_file = BytesIO()
-        temp_file.write(binary_data)
-        temp_file.seek(0)
-
         # if artist w/ melon_id = artist_id already exists,
         # update date in DB,
         # or add new artist in DB
@@ -50,8 +43,12 @@ class ArtistManager(models.Manager):
             }
         )
 
-        from pathlib import Path
-        file_name = Path(url_img_cover).name
+        temp_file = download(url_img_cover)
+        file_name = '{artist_id}.{ext}'.format(
+            artist_id=artist_id,
+            ext=get_buffer_ext(temp_file),
+        )
+
         artist.img_profile.save(file_name, File(temp_file))
 
         return artist, artist_created

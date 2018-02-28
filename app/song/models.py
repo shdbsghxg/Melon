@@ -49,8 +49,8 @@ class SongManager(models.Manager):
 
         # album must be an object
         # album = description_dict.get('앨범')
-        release_song_date_str = description_dict.get('발매일')
-        release_song_date = datetime.strptime(release_song_date_str, '%Y.%m.%d')
+        # release_song_date_str = description_dict.get('발매일')
+        # release_song_date = datetime.strptime(release_song_date_str, '%Y.%m.%d')
         genre = description_dict.get('장르')
 
         div_lyric = soup.find('div', id='d_video_summary')
@@ -64,13 +64,15 @@ class SongManager(models.Manager):
                     lyrics_list.append(item.strip())
             lyrics = ''.join(lyrics_list)
 
+        artist, artist_created = Artist.objects.update_or_create_from_melon(artist_id)
+        album, album_created = Album.objects.update_or_create_from_melon(album_id)
         song, song_created = self.update_or_create(
             melon_id=song_id,
             defaults={
                 'title': title,
-                'artist': artist,
-                # 'album': album,
-                'release_song_date': datetime.strftime(release_song_date, '%Y-%m-%d'),
+                # 'artist': artist,
+                'album': album,
+                # 'release_song_date': datetime.strftime(release_song_date, '%Y-%m-%d'),
                 'genre': genre,
                 'lyrics': lyrics,
                 # 'artist_id': artist_id,
@@ -78,24 +80,13 @@ class SongManager(models.Manager):
             }
         )
 
-        artist, artist_created = Artist.objects.update_or_create_from_melon(artist_id)
-        album, album_created = Album.objects.update_or_create_from_melon(album_id)
-
         song.artists.add(artist)
-        song.album = album
 
         return song, song_created
 
 
 class Song(models.Model):
     melon_id = models.CharField('melon Song ID', max_length=20, blank=True, null=True, unique=True)
-    # artist_id = models.CharField('melon Artist ID', max_length=20, blank=True, null=True, unique=True)
-    # album_id = models.CharField('melon Album ID', max_length=20, blank=True, null=True, unique=True)
-    artists = models.ManyToManyField(
-        Artist,
-        verbose_name='아티스트 목록',
-        blank=True,
-    )
     album = models.ForeignKey(
         Album,
         verbose_name='앨범',
@@ -103,11 +94,14 @@ class Song(models.Model):
         blank=True,
         null=True,
     )
+    artists = models.ManyToManyField(
+        Artist,
+        verbose_name='아티스트 목록',
+        blank=True,
+    )
     title = models.CharField('곡 제목', max_length=100)
     genre = models.CharField('장르', max_length=100)
     lyrics = models.TextField('가사', blank=True)
-    artist = models.CharField('아티스트', max_length=50, null=True)
-    release_song_date = models.DateField(blank=True, null=True)
 
     objects = SongManager()
 
@@ -131,7 +125,8 @@ class Song(models.Model):
 
     def __str__(self):
         return '{artist} - {title}'.format(
-            artist=self.artist,
+            # artist=self.artists.name,
+            artist=', '.join(self.artists.values_list('name', flat=True)),
             title=self.title,
             # album=self.album.title,
         )
