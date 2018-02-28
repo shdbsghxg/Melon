@@ -4,9 +4,8 @@ from bs4 import BeautifulSoup
 from django.core.files import File
 from django.db import models
 import requests
-from io import BytesIO
 
-from artist.models import Artist
+from utils.file import download, get_buffer_ext
 
 
 class AlbumManager(models.Manager):
@@ -29,12 +28,6 @@ class AlbumManager(models.Manager):
         title = info_cont.select_one('div.info > div.song_name strong').next_sibling.strip()
         release_date = info_cont.select_one('div.meta > dl.list > dd:nth-of-type(1)').text
 
-        response = requests.get(url_img_cover)
-        binary_data = response.content
-        temp_file = BytesIO()
-        temp_file.write(binary_data)
-        temp_file.seek(0)
-
         album, album_created = self.update_or_create(
             melon_id=album_id,
             defaults={
@@ -43,8 +36,13 @@ class AlbumManager(models.Manager):
                 'release_date': datetime.strptime(release_date, '%Y.%m.%d')
             }
         )
-        from pathlib import Path
-        file_name = Path(url_img_cover).name
+
+        temp_file = download(url_img_cover)
+        file_name = '{album_id}.{ext}'.format(
+            album_id=album_id,
+            ext=get_buffer_ext(temp_file)
+        )
+
         album.img_cover.save(file_name, File(temp_file))
 
         return album, album_created
