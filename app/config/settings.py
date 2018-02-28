@@ -40,7 +40,7 @@ SECRET_KEY = '$uy3&l%20&_djbai3hnp1na-(-3djru(+y91x)@um#2e&&7&fx'
 DEBUG = True
 
 ALLOWED_HOSTS = []
-
+AUTH_USER_MODEL = 'members.User'
 # Application definition
 
 INSTALLED_APPS = [
