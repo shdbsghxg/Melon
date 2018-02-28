@@ -25,6 +25,7 @@ class AlbumManager(models.Manager):
 
         # rsplit( separator, number of splits ) --> list
         url_img_cover = url_img_cover_cont.select_one('a.image_typeAll > img').get('src').rsplit('?', 1)[0]
+        print(url_img_cover)
         title = info_cont.select_one('div.info > div.song_name strong').next_sibling.strip()
         release_date = info_cont.select_one('div.meta > dl.list > dd:nth-of-type(1)').text
 
@@ -32,7 +33,6 @@ class AlbumManager(models.Manager):
             melon_id=album_id,
             defaults={
                 'title': title,
-                'img_cover': url_img_cover,
                 'release_date': datetime.strptime(release_date, '%Y.%m.%d')
             }
         )
@@ -40,9 +40,12 @@ class AlbumManager(models.Manager):
         temp_file = download(url_img_cover)
         file_name = '{album_id}.{ext}'.format(
             album_id=album_id,
-            ext=get_buffer_ext(temp_file)
+            ext=get_buffer_ext(temp_file),
         )
-
+        # saving an img in a row creates new img file
+        # why??
+        if album.img_cover:
+            album.img_cover.delete()
         album.img_cover.save(file_name, File(temp_file))
 
         return album, album_created
