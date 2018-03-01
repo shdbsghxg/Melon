@@ -14,35 +14,41 @@
 </head>
 <body>
 
-<div class="header-wrap">
-    <header class="main-header">
-        {% if request.user.is_authenticated %}
-        <div>logged in with {{ request.user }}</div>
-        {% else %}
-        <div><a href="{% url 'login' %}">login</a></div>
-        {% endif %}
-
-        <div class="search-container">
-            <img src="{% static 'images/logo.png' %}" alt="">
-            <div class="input-container">
-                <input type="text" class="search-input">
+    <div class="header-wrap">
+        <header class="main-header clearfix">
+            <div class="search-container">
+                <a href="">
+                    <img src="{% static 'images/logo.png' %}" alt="">
+                </a>
+                <div class="input-container">
+                    <input type="text" class="search-input">
+                </div>
             </div>
-        </div>
-        <nav class="main-header-nav">
-            <ul class="clearfix">
-                <li><a href="{% url 'artist:artist-list' %}">아티스트</a></li>
-                <li><a href="{% url 'album:album-list' %}">앨범</a></li>
-                <li><a href="{% url 'song:song-list' %}">노래</a></li>
-            </ul>
-        </nav>
-    </header>
-</div>
+            <nav class="main-header-nav clearfix">
+                <ul class="clearfix">
+                    <li><a href="{% url 'artist:artist-list' %}">Artists</a></li>
+                    <li><a href="{% url 'album:album-list' %}">Albums</a></li>
+                    <li><a href="{% url 'song:song-list' %}">Songs</a></li>
+                </ul>
+            </nav>
+            <nav class="main-header-nav clearfix nav-right">
+                <ul class="clearfix">
+                    {% if user.is_authenticated %}
+                    <li><a href="">myinfo</a></li>
+                    <li><a href="{% url 'logout' %}">Logout</a></li>
+                    {% else %}
+                    <li><a href="{% url 'login' %}">Login</a></li>
+                    <li><a href="{% url 'signup' %}">Signup</a></li>
+                    {% endif %}
+                </ul>
+            </nav>
+        </header>
+    </div>
 
-
-<div class="content-block">
-    {% block content %}
-    {% endblock %}
-</div>
+    <div class="content-block">
+        {% block content %}
+        {% endblock %}
+    </div>
 
 </body>
 </html>

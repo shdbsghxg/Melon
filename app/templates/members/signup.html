@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+<div class="signup-container">
+    <form action="" method="POST" class="clearfix">
+        {% csrf_token %}
+
+        {% if errors %}
+            {% for error in errors %}
+            <p>{{ error }}</p>
+            {% endfor %}
+        {% endif %}
+        <div class="form-group clearfix">
+            <label for="username">ID</label>
+            <input type="text" id="username" name="username">
+        </div>
+        <div class="form-group clearfix">
+            <label for="password">password</label>
+            <input type="password" id="password" name="password">
+        </div>
+        <div class="form-group clearfix">
+            <label for="password_confirm">password_confirm</label>
+            <input type="password" id="password_confirm" name="password_confirm">
+        </div>
+        <div>
+            <button type="submit" class="btn btn-signup btn-theme">signup</button>
+        </div>
+    </form>
+</div>
+
+{% endblock %}

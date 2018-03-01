@@ -1,17 +1,13 @@
-
-div.header-wrap {
+.header-wrap {
   border-bottom: 1px solid #999;
 }
-
 header.main-header {
-  width: 1000px;
+  width: 100%;
   margin: 0 auto;
 
-
   > .search-container {
-
     > .input-container {
-      margin:36px 0 0 11px ;
+      margin: 36px 0 0 11px;
       vertical-align: top;
       display: inline-block;
       width: 322px;
@@ -23,28 +19,26 @@ header.main-header {
         border: 0;
         font-size: 12px;
         height: 20px;
-        line-height: 20;
+        line-height: 20px;
         color: #999;
         margin: 7px 0 0 18px;
         padding-top: 3px;
         padding-left: 0;
       }
+
     }
   }
 }
 header.main-header > nav.main-header-nav {
+  float: left;
+  &.nav-right {
+    float: right;
+  }
   > ul {
-    content: '';
-    display: inline-block;
-    height: 100%;
-    vertical-align: middle;
-    margin-left: -0.25em;
-
     > li {
-      margin-left: 5px;
       float: left;
-
       > a {
+        display: inline-block;
         padding: 8px 16px;
         font-size: 1.3rem;
         color: #333;

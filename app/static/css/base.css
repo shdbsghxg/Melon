@@ -1,13 +1,24 @@
 html, body {
   margin: 0;
   padding: 0;
-  font-size: 13px;
+  font-size: 14px;
   background-color: #fff;
-  height: 100px;
+  height: 100%;
 }
 
 body {
   border-top: 3px solid #04c944;
+}
+
+.content-block {
+  max-width: 100%;
+  margin: 0 auto;
+}
+
+.content-block > div.form-container {
+  text-align: center;
+  margin: 100px auto;
+  max-width: 50%;
 }
 
 ul, ol {
@@ -21,9 +32,13 @@ a {
   color: #7cb710;
 }
 
-clearfix::after {
+.clearfix::after {
   content: '';
   height: 0;
   clear: both;
   display: block;
+}
+
+h1 {
+  text-align: center;
 }

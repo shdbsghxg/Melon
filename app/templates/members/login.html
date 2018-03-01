@@ -2,11 +2,22 @@
 
 {% block content %}
 
-<div>
+<div class="form-container">
     <form action="" method="POST">
         {% csrf_token %}
-        <input type="text" name="username">
-        <input type="password" name="password">
+        {% if errors %}
+        {% for error in errors %}
+        <div>
+            <p>{{ error }}</p>
+        </div>
+        {% endfor %}
+        {% endif %}
+        <div class="input-container">
+            <input type="text" name="username" placeholder="username">
+        </div>
+        <div class="input-container">
+            <input type="password" name="password" placeholder="password">
+        </div>
         <button type="submit">login</button>
     </form>
 </div>
