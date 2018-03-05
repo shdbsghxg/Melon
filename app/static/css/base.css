@@ -17,8 +17,16 @@ body {
 
 .content-block > div.form-container {
   text-align: center;
-  margin: 100px auto;
+  margin-top: 100px auto;
   max-width: 50%;
+}
+
+button {
+  margin-top: 20px;
+}
+
+input {
+  margin: 10px 10px 10px 10px;
 }
 
 ul, ol {
