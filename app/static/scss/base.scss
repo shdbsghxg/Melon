@@ -14,17 +14,19 @@ body {
   margin: 0 auto;
   > div.form-container {
     text-align: center;
-    margin-top: 100px auto;
+    margin: 100px auto;
     max-width: 50%;
+    > form > div.form-group {
+      margin-bottom: 10px;
+      > .label-box {
+        width: 120px;
+        display: inline-block;
+        > label {
+          text-align: center;
+        }
+      }
+    }
   }
-}
-
-button {
-  margin-top: 20px;
-}
-
-input {
-  margin: 10px 10px 10px 10px;
 }
 
 ul, ol {

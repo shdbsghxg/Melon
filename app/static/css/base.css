@@ -17,16 +17,21 @@ body {
 
 .content-block > div.form-container {
   text-align: center;
-  margin-top: 100px auto;
+  margin: 100px auto;
   max-width: 50%;
 }
 
-button {
-  margin-top: 20px;
+.content-block > div.form-container > form > div.form-group {
+  margin-bottom: 10px;
 }
 
-input {
-  margin: 10px 10px 10px 10px;
+.content-block > div.form-container > form > div.form-group > .label-box {
+  width: 120px;
+  display: inline-block;
+}
+
+.content-block > div.form-container > form > div.form-group > .label-box > label {
+  text-align: center;
 }
 
 ul, ol {
