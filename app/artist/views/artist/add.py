@@ -1,6 +1,7 @@
 from django.shortcuts import redirect, render
 
-from artist.models import Artist
+from ...forms import ArtistForm
+from ...models import Artist
 
 __all__ = (
     'artist_add',
@@ -10,13 +11,20 @@ __all__ = (
 def artist_add(request):
     # context = {}
     if request.method == 'POST':
-        name = request.POST['name']
-        Artist.objects.create(
-            name=name
-        )
-        return redirect('artist:artist-list')
+        # for sending a file to DB w/ form[ enctyoe = multupart/form-data ]
+        # file is not in request.POST but in request.FILES
+        # so, send request.FILES also to form
+        form = ArtistForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            return redirect('artist:artist-list')
     else:
-        return render(request, 'artist/artist_add.html')
+        form = ArtistForm()
+
+    context = {
+        'artist_form': form,
+    }
+    return render(request, 'artist/artist_add.html', context)
 
     #     name = request.POST['name']
     #     real_name = request.POST['real_name']
@@ -41,3 +49,4 @@ def artist_add(request):
     #         return redirect('artist-list', pk=post.pk)
     #     context['form_error'] = 'input correctly'
     # return render(request, 'artist/artist_add.html', context)
+

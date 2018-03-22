@@ -4,14 +4,29 @@
 {% block content %}
 
 <h3>Artist Add</h3>
-<form action="" method="POST">
+<!--to send a file to DB, set enctype-->
+<form action="" method="POST" enctype="multipart/form-data">
     {% csrf_token %}
-    <input type="text" name="name">
+    {% for field in artist_form %}
+    <div>
+        <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+        {{ field }}
+        {% if field.errors %}
+        <ul>
+            {% for error in field.errors %}
+                <li>{{ error }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+    </div>
+    {% endfor %}
     <button type="submit">등록</button>
 </form>
 
+<hr>
+
 <h3>Artist Add From Melon</h3>
-<form action="{% url 'artist:artist-add-from-melon' %}">
+<form action="{% url 'artist:artist-search-from-melon' %}">
     <input type="text" name="keyword" placeholder="artist-name">
     <button type="submit">search</button>
 </form>
