@@ -7,30 +7,26 @@
     <form action="" method="POST" class="clearfix">
         {% csrf_token %}
 
-        {% if errors %}
-            {% for error in errors %}
-            <p>{{ error }}</p>
-            {% endfor %}
-        {% endif %}
+        <!--{% if errors %}-->
+        <!--{% for error in errors %}-->
+        <!--<p>{{ error }}</p>-->
+        <!--{% endfor %}-->
+        <!--{% endif %}-->
 
+        {% for field in signup_form %}
         <div class="form-group clearfix">
             <div class="label-box">
-                <label for="username">ID</label>
+                <label for="{{ field.id_for_label }}">{{ field.label }}</label>
             </div>
-            <input type="text" id="username" name="username">
+            <!--form automatically create input element only, label, button must be created manually-->
+            <!--using {{ field.label_tag }}, but it creates ':' next to label name-->
+            {{ field }}
+            {% for error in field.errors %}
+                <p>{{ error }}</p>
+            {% endfor %}
         </div>
-        <div class="form-group clearfix">
-            <div class="label-box">
-                <label for="password">password</label>
-            </div>
-            <input type="password" id="password" name="password">
-        </div>
-        <div class="form-group clearfix">
-            <div class="label-box">
-                <label for="password_confirm">password_confirm</label>
-            </div>
-            <input type="password" id="password_confirm" name="password_confirm">
-        </div>
+        {% endfor %}
+
         <div>
             <button type="submit" class="btn btn-signup btn-theme">signup</button>
         </div>

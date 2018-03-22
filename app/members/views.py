@@ -2,6 +2,8 @@ from django.contrib.auth import authenticate, login, logout, get_user_model
 from django.contrib.auth.hashers import check_password
 from django.shortcuts import render, redirect
 
+from members.forms import SignupForm
+
 User = get_user_model()
 
 
@@ -38,31 +40,48 @@ def logout_view(request):
 
 
 def signup_view(request):
-    context = {
-        'errors': [],
-    }
-
     if request.method == 'POST':
-        username = request.POST['username']
-        password = request.POST['password']
-        password_confirm = request.POST['password_confirm']
+        form = SignupForm(request.POST)
+        if form.is_valid():
+            username = form.cleaned_data['username']
+            password = form.cleaned_data['password']
+            password_confirm = form.cleaned_data['password_confirm']
 
-        is_valid = True
-        if User.objects.filter(username=username).exists():
-            error = 'Username already exists'
-            context['errors'].append(error)
-            is_valid = False
-        if password != password_confirm:
-            error = 'Password confirmation failed'
-            context['errors'].append(error)
-            is_valid = False
-        if is_valid:
-            user = User.objects.create_user(
-                username=username,
-                password=password,
-            )
-            user.save()
-            return redirect('index')
+            is_valid=True
+            if User.objects.filter(username=username).exists():
+                form.add_error('username','username already exists')
+                is_valid=False
+            if password != password_confirm:
+                form.add_error('password','password confirmation failed')
+                is_valid=False
+            if is_valid:
+                User.objects.create_user(username=username, password=password)
+                return redirect('index')
+    else:
+        form = SignupForm()
+    context = {
+        'signup_form': form,
+    }
+        # username = request.POST['username']
+        # password = request.POST['password']
+        # password_confirm = request.POST['password_confirm']
+        #
+        # is_valid = True
+        # if User.objects.filter(username=username).exists():
+        #     error = 'Username already exists'
+        #     context['errors'].append(error)
+        #     is_valid = False
+        # if password != password_confirm:
+        #     error = 'Password confirmation failed'
+        #     context['errors'].append(error)
+        #     is_valid = False
+        # if is_valid:
+        #     user = User.objects.create_user(
+        #         username=username,
+        #         password=password,
+        #     )
+        #     user.save()
+        #     return redirect('index')
     return render(request, 'members/signup.html', context)
     # /signup/
     # consider - username, password, password 2(for confirmation)
