@@ -3,15 +3,16 @@
 
 {% block content %}
 
+<h3>Artist Add</h3>
 <form action="" method="POST">
     {% csrf_token %}
-    <div>
-        <h1>Artist_add</h1>
-    </div>
-
     <input type="text" name="name">
     <button type="submit">등록</button>
-
 </form>
 
+<h3>Artist Add From Melon</h3>
+<form action="{% url 'artist:artist-add-from-melon' %}">
+    <input type="text" name="keyword" placeholder="artist-name">
+    <button type="submit">search</button>
+</form>
 {% endblock %}

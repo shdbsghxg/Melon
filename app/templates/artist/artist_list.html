@@ -2,6 +2,7 @@
 
 {% block content %}
 <div class="artist-list-container">
+    <a href="{% url 'artist:artist-add' %}">Add Artist</a>
     <ul class="clearfix">
         {% for artist in artists %}
         <li class="clearfix">

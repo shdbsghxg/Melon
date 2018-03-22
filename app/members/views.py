@@ -45,20 +45,20 @@ def signup_view(request):
         if form.is_valid():
             username = form.cleaned_data['username']
             password = form.cleaned_data['password']
-            password_confirm = form.cleaned_data['password_confirm']
 
-            is_valid=True
-            if User.objects.filter(username=username).exists():
-                form.add_error('username','username already exists')
-                is_valid=False
-            if password != password_confirm:
-                form.add_error('password','password confirmation failed')
-                is_valid=False
-            if is_valid:
-                User.objects.create_user(username=username, password=password)
-                return redirect('index')
+            # is_valid=True
+            # if User.objects.filter(username=username).exists():
+            #     form.add_error('username','username already exists')
+            #     is_valid=False
+            # if password != password_confirm:
+            #     form.add_error('password','password confirmation failed')
+            #     is_valid=False
+            # if is_valid:
+            User.objects.create_user(username=username, password=password)
+            return redirect('index')
     else:
         form = SignupForm()
+
     context = {
         'signup_form': form,
     }
