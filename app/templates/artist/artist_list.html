@@ -16,6 +16,17 @@
                     <div>{{ artist.constellation }}</div>
                     <div>{{ artist.blood_type }}</div>
                 </div>
+
+                {% if request.user.is_authenticated %}
+                    <form action="{% url 'artist:artist-like-toggle' artist_pk=artist.pk %}" method="POST">
+                        {% csrf_token %}
+                        {% if request.user in artist.like_users.all %}
+                            <button type="submit">like_off</button>
+                        {% else %}
+                            <button type="submit">like_on</button>
+                        {% endif %}
+                    </form>
+                {% endif %}
             </a>
         </li>
         {% endfor %}
