@@ -1,5 +1,6 @@
 from datetime import datetime
 
+from django.conf import settings
 from django.core.files import File
 from django.db import models
 
@@ -81,8 +82,56 @@ class Artist(models.Model):
     constellation = models.CharField('별자리', max_length=30)
     blood_type = models.CharField('혈액형', max_length=1, choices=CHOICES_BLOOD_TYPE, blank=True)
     intro = models.TextField('소개', blank=True)
+    like_users = models.ManyToManyField(
+        settings.AUTH_USER_MODEL,
+        through='ArtistLike',
+        related_name='like_artists',
+        blank=True,
+    )
 
     objects = ArtistManager()
 
     def __str__(self):
         return self.name
+
+    def toggle_like_user(self, user):
+        # check = ArtistLike.objects.filter(artist=self, user=user)
+        # if not check.exists():
+        #     ArtistLike.objects.create(artist=self, user=user)
+        #     return False
+        # else:
+        #     check.delete()
+        #     return True
+
+        like, like_created = self.like_user_info_list.get_or_create(user=user)
+        if not like_created:
+            like.delete()
+        return like_created
+
+
+class ArtistLike(models.Model):
+    artist = models.ForeignKey(
+        Artist,
+        related_name='like_user_info_list',
+        on_delete=models.CASCADE,
+    )
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        related_name='like_artist_info_list',
+        on_delete=models.CASCADE,
+    )
+    created_date = models.DateTimeField(
+        auto_now_add=True,
+    )
+
+    class Meta:
+        unique_together = (
+            ('artist', 'user'),
+        )
+
+    def __str__(self):
+        return 'ArtistLike (User: {user}, Artist: {artist}, Created: {created})'.format(
+            user=self.user.username,
+            artist=self.artist.name,
+            created=datetime.strftime(self.created_date, '%y.%m.%d'),
+        )
