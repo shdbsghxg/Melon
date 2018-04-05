@@ -5,19 +5,18 @@
 <div class="form-container">
     <form action="" method="POST">
         {% csrf_token %}
-        {% if errors %}
-        {% for error in errors %}
-        <div>
-            <p>{{ error }}</p>
+        {% for field in login_form %}
+        <div class="form-group clearfix">
+            <div class="label-box">
+                <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+            </div>
+            {{ field }}
+            {% for error in field.errors %}
+                <p>{{ error }}</p>
+            {% endfor %}
         </div>
         {% endfor %}
-        {% endif %}
-        <div class="form-group clearfix">
-            <input type="text" name="username" placeholder="username">
-        </div>
-        <div class="form-group clearfix">
-            <input type="password" name="password" placeholder="password">
-        </div>
+
         <button type="submit">login</button>
     </form>
 </div>
